@@ -1,0 +1,307 @@
+/* =========================================================
+  Theme
+   =========================================================
+
+   Design-system rules:
+
+   1. Custom values defined in Figma live here.
+   2. Derived tokens should reference their source tokens.
+   3. Components should consume tokens, not repeat raw values.
+   4. Values not defined here should prefer Tailwind defaults.
+   5. Do not introduce arbitrary values when an existing token exists.
+   ========================================================= */
+
+:root {
+  color-scheme: light;
+
+  /* =======================================================
+     Opacity
+     ======================================================= */
+
+  --opacity-100: 100%;
+  --opacity-20: 20%;
+  --opacity-8: 8%;
+
+  /* =======================================================
+     White Static
+     ======================================================= */
+
+  --color-white-static-base: #ffffff;
+
+  --color-white-static-100: var(--color-white-static-base);
+
+  --color-white-static-20: color-mix(
+    in srgb,
+    var(--color-white-static-base) var(--opacity-20),
+    transparent
+  );
+
+  --color-white-static-8: color-mix(
+    in srgb,
+    var(--color-white-static-base) var(--opacity-8),
+    transparent
+  );
+
+  /* =======================================================
+     High Tone
+     ======================================================= */
+
+  --color-high-tone-base: #05142e;
+
+  --color-high-tone-100: var(--color-high-tone-base);
+
+  --color-high-tone-20: color-mix(
+    in srgb,
+    var(--color-high-tone-base) var(--opacity-20),
+    transparent
+  );
+
+  --color-high-tone-8: color-mix(
+    in srgb,
+    var(--color-high-tone-base) var(--opacity-8),
+    transparent
+  );
+
+  /* =======================================================
+     Mid Tone
+     ======================================================= */
+
+  --color-mid-tone-base: #626e84;
+
+  --color-mid-tone-100: var(--color-mid-tone-base);
+
+  --color-mid-tone-20: color-mix(
+    in srgb,
+    var(--color-mid-tone-base) var(--opacity-20),
+    transparent
+  );
+
+  --color-mid-tone-8: color-mix(
+    in srgb,
+    var(--color-mid-tone-base) var(--opacity-8),
+    transparent
+  );
+
+  /* =======================================================
+     Low Tone
+     ======================================================= */
+
+  --color-low-tone-base: #a3aec2;
+
+  --color-low-tone-100: var(--color-low-tone-base);
+
+  --color-low-tone-20: color-mix(
+    in srgb,
+    var(--color-low-tone-base) var(--opacity-20),
+    transparent
+  );
+
+  --color-low-tone-8: color-mix(
+    in srgb,
+    var(--color-low-tone-base) var(--opacity-8),
+    transparent
+  );
+
+  /* =======================================================
+     Primary Tone
+     ======================================================= */
+
+  --color-primary-tone-base: #1757e1;
+
+  --color-primary-tone-100: var(--color-primary-tone-base);
+
+  --color-primary-tone-20: color-mix(
+    in srgb,
+    var(--color-primary-tone-base) var(--opacity-20),
+    transparent
+  );
+
+  --color-primary-tone-8: color-mix(
+    in srgb,
+    var(--color-primary-tone-base) var(--opacity-8),
+    transparent
+  );
+
+  /* =======================================================
+     Error Tone
+     ======================================================= */
+
+  --color-error-tone-base: #e23b07;
+
+  --color-error-tone-100: var(--color-error-tone-base);
+
+  --color-error-tone-20: color-mix(
+    in srgb,
+    var(--color-error-tone-base) var(--opacity-20),
+    transparent
+  );
+
+  --color-error-tone-8: color-mix(
+    in srgb,
+    var(--color-error-tone-base) var(--opacity-8),
+    transparent
+  );
+
+  /* =======================================================
+     Background
+     ======================================================= */
+
+  --color-background-high: #ffffff;
+  --color-background-mid: #f9fafa;
+  --color-background-low: #edf0f2;
+
+  /* =======================================================
+     Semantic aliases
+     -------------------------------------------------------
+     Components should prefer these when the semantic meaning
+     is known instead of depending directly on palette tokens.
+     ======================================================= */
+
+  --color-text-primary: var(--color-high-tone-100);
+  --color-text-secondary: var(--color-mid-tone-100);
+  --color-text-muted: var(--color-low-tone-100);
+
+  --color-accent: var(--color-primary-tone-100);
+  --color-error: var(--color-error-tone-100);
+
+  --color-surface-high: var(--color-background-high);
+  --color-surface-mid: var(--color-background-mid);
+  --color-surface-low: var(--color-background-low);
+
+  --color-focus: var(--color-primary-tone-100);
+  --color-hover-overlay: var(--color-high-tone-8);
+  --color-disabled: var(--color-low-tone-100);
+
+  /* =======================================================
+    Effect Styles — Shadows
+    ======================================================= */
+
+  --shadow-2xs:
+    0 1px 0 0 var(--color-high-tone-8),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.1),
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.12),
+    0 0 0 1px var(--color-high-tone-8);
+
+  --shadow-xs:
+    0 1px 1px -0.5px rgba(5, 20, 46, 0.19),
+    0 2px 2px -1px rgba(5, 20, 46, 0.04), 0 4px 4px -2px rgba(5, 20, 46, 0.02),
+    0 8px 4px -3px rgba(5, 20, 46, 0.01), 0 0 0 1px var(--color-high-tone-8),
+    0 1px 0 0 rgba(5, 20, 46, 0.04), inset 0 0 0 1px rgba(255, 255, 255, 0.1),
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.12);
+
+  --shadow-sm:
+    0 1px 2px -0.5px rgba(5, 20, 46, 0.19),
+    0 3px 3px -1px rgba(5, 20, 46, 0.04), 0 6px 5px -2px rgba(5, 20, 46, 0.02),
+    0 15px 6px -3px rgba(5, 20, 46, 0.01), 0 0 0 1px var(--color-high-tone-8),
+    0 1px 0 0 rgba(5, 20, 46, 0.04), inset 0 0 0 1px rgba(255, 255, 255, 0.1),
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.12);
+
+  --shadow-md:
+    0 1px 3px -1px rgba(5, 20, 46, 0.05), 0 5px 5px -2px rgba(5, 20, 46, 0.05),
+    0 12px 6px -3px rgba(5, 20, 46, 0.03),
+    0 16px 8px -4px rgba(5, 20, 46, 0.01),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.1),
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.12),
+    0 0 0 1px var(--color-high-tone-8), 0 1px 0 0 rgba(5, 20, 46, 0.04);
+
+  --shadow-lg:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.1),
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.12),
+    0 0 0 1px var(--color-high-tone-8), 0 1px 0 0 rgba(5, 20, 46, 0.1),
+    0 2px 5px -2px rgba(5, 20, 46, 0.06), 0 8px 12px -2px rgba(5, 20, 46, 0.05),
+    0 22px 16px -4px rgba(5, 20, 46, 0.04),
+    0 32px 18px -4px rgba(5, 20, 46, 0.01);
+
+  --shadow-xl:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.1),
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.12),
+    0 0 0 1px var(--color-high-tone-8), 0 1px 0 0 rgba(5, 20, 46, 0.1),
+    0 4px 8px -4px rgba(5, 20, 46, 0.06),
+    0 15px 15px -4px rgba(5, 20, 46, 0.05),
+    0 33px 20px -8px rgba(5, 20, 46, 0.04),
+    0 58px 23px -8px rgba(5, 20, 46, 0.01);
+
+  --shadow-2xl:
+    0 12px 30px -4px rgba(5, 20, 46, 0.07),
+    0 48px 48px -12px rgba(5, 20, 46, 0.06),
+    0 120px 60px 0 rgba(5, 20, 46, 0.03),
+    0 200px 80px -12px rgba(5, 20, 46, 0.01),
+    0 0 0 1px var(--color-high-tone-8), 0 1px 0 0 rgba(5, 20, 46, 0.1),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.1),
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.12);
+
+  /* =======================================================
+    Effect Styles — Primary Shadows
+    ======================================================= */
+
+  --shadow-primary-xs:
+    0 1px 1px 1px var(--color-primary-tone-8),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.1),
+    inset 0 -1px 0 0 rgba(5, 20, 46, 0.25),
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.4),
+    0 0 0 1px var(--color-primary-tone-8);
+
+  --shadow-primary-sm:
+    0 1.4px 1.4px 1.4px var(--color-primary-tone-8),
+    inset 0 0 0 1.4px rgba(255, 255, 255, 0.1),
+    inset 0 -1.4px 0 0 rgba(5, 20, 46, 0.25),
+    inset 0 1.4px 0 0 rgba(255, 255, 255, 0.4),
+    0 0 0 1.4px var(--color-primary-tone-8);
+
+  /* =======================================================
+      Effect Styles — Interaction
+      ======================================================= */
+
+  --focus-shadow:
+    0 1px 0 0 var(--color-high-tone-8),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.05),
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.12),
+    0 0 0 1px var(--color-high-tone-8);
+
+  --typing-normal:
+    0 1px 0 0 var(--color-high-tone-8),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.05),
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.12),
+    0 0 0 1px var(--color-high-tone-8),
+    0 0 0 1.5px var(--color-primary-tone-100);
+
+  --typing-error:
+    0 1px 0 0 var(--color-high-tone-8),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.05),
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.12),
+    0 0 0 1px var(--color-high-tone-8), 0 0 0 1.5px var(--color-error-tone-100);
+}
+
+/* =========================================================
+   Dark Theme
+   ---------------------------------------------------------
+   Only override primitive values that actually change.
+
+   Derived tokens such as high-tone/20 automatically update
+   because they reference the primitive base variable.
+   ========================================================= */
+
+.dark {
+  color-scheme: dark;
+
+  --color-high-tone-base: #f9f9f9;
+  --color-mid-tone-base: #8092b2;
+  --color-low-tone-base: #47546b;
+
+  --color-primary-tone-base: #1757e1;
+  --color-error-tone-base: #e23b07;
+
+  --color-background-high: #1b2332;
+  --color-background-mid: #0f1724;
+  --color-background-low: #050b14;
+}
+
+/* =========================================================
+   Base
+   ========================================================= */
+
+html,
+body {
+  background: var(--color-background-low);
+  color: var(--color-text-primary);
+}

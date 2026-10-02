@@ -1,0 +1,84 @@
+@import 'tailwindcss';
+
+@theme inline {
+  --color-app-canvas: var(--color-surface-low);
+  --color-app-surface: var(--color-surface-high);
+  --color-app-subtle: var(--color-surface-mid);
+  --color-app-text: var(--color-text-primary);
+  --color-app-muted: var(--color-text-secondary);
+  --color-app-placeholder: var(--color-text-muted);
+  --color-app-accent: var(--color-accent);
+  --color-app-error: var(--color-error);
+  --color-app-accent-hover: color-mix(
+    in srgb,
+    var(--color-high-tone-base) var(--opacity-20),
+    var(--color-primary-tone-base)
+  );
+  --color-app-control-hover: color-mix(
+    in srgb,
+    var(--color-high-tone-base) var(--opacity-8),
+    var(--color-background-high)
+  );
+  --color-app-disabled: var(--color-disabled);
+  --color-app-disabled-control: color-mix(
+    in srgb,
+    var(--color-high-tone-base) var(--opacity-8),
+    var(--color-low-tone-base)
+  );
+  --color-app-border: var(--color-high-tone-8);
+  --color-app-divider: var(--color-mid-tone-8);
+  --color-app-key-border: var(--color-low-tone-20);
+  --color-app-hover: var(--color-hover-overlay);
+  --color-app-focus: var(--color-focus);
+  --shadow-app: var(--shadow-sm);
+  --shadow-app-xs: var(--shadow-xs);
+  --shadow-app-lg: var(--shadow-lg);
+  --shadow-app-xl: var(--shadow-xl);
+  --shadow-app-primary: var(--shadow-primary-sm);
+  --shadow-app-primary-xs: var(--shadow-primary-xs);
+  --shadow-app-focus: var(--focus-shadow);
+  --shadow-app-typing: var(--typing-normal);
+  --shadow-app-error: var(--typing-error);
+  --font-app-mono:
+    'Geist Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+    'Liberation Mono', 'Courier New', monospace;
+  --font-app-brand:
+    'GT Walsheim Pro', 'Avenir Next', Avenir, 'Segoe UI', sans-serif;
+}
+
+@layer base {
+  html {
+    min-width: 320px;
+  }
+
+  body {
+    min-width: 320px;
+    min-height: 100vh;
+    margin: 0;
+  }
+
+  button {
+    cursor: pointer;
+  }
+}
+
+@layer utilities {
+  .task-scrollbar {
+    scrollbar-color: var(--color-high-tone-8) transparent;
+    scrollbar-width: thin;
+  }
+
+  .task-scrollbar::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  .task-scrollbar::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .task-scrollbar::-webkit-scrollbar-thumb {
+    min-height: 48px;
+    border-radius: 12px;
+    background: var(--color-high-tone-8);
+  }
+}
