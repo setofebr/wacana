@@ -58,18 +58,20 @@ and focus the task editor.
 
 Only one task may be selected at a time.
 
-| Key                | Action                                |
-| ------------------ | ------------------------------------- |
-| `Enter` / `Return` | Edit selected task                    |
-| `Delete`           | Delete selected task                  |
-| `Escape`           | Delete selected task                  |
-| `Space`            | Toggle task completion                |
-| `Mod + C`          | Copy selected task                    |
-| `Mod + V`          | Paste copied task below selected task |
-| `Arrow Up`         | Select previous task                  |
-| `Arrow Down`       | Select next task                      |
-| `Arrow Right`      | Convert task to subtask               |
-| `Arrow Left`       | Convert subtask to task               |
+| Key                    | Action                                |
+| ---------------------- | ------------------------------------- |
+| `Enter` / `Return`     | Edit selected task                    |
+| `Delete` / `Backspace` | Delete selected task                  |
+| `Escape`               | Delete selected task                  |
+| `Space`                | Toggle task completion                |
+| `Mod + C`              | Copy selected task                    |
+| `Mod + V`              | Paste copied task below selected task |
+| `Mod + Arrow Up`       | Move selected task up                 |
+| `Mod + Arrow Down`     | Move selected task down               |
+| `Arrow Up`             | Select previous task                  |
+| `Arrow Down`           | Select next task                      |
+| `Arrow Right`          | Convert task to subtask               |
+| `Arrow Left`           | Convert subtask to task               |
 
 Keyboard navigation must preserve the visual selected state.
 
@@ -82,6 +84,11 @@ the application.
 When `Space` completes an incomplete task, keyboard selection moves to the
 nearest task above it in the current **To do** order, when one exists.
 Uncompleting a task does not move the selection.
+
+`Mod + Arrow Up` and `Mod + Arrow Down` reorder tasks without changing focus.
+Root tasks move with their subtasks, while subtasks move only among siblings.
+Drag and drop follows the same grouping rules. Tasks cannot be reordered
+between the **To do** and **Completed** sections.
 
 ---
 

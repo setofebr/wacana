@@ -1,4 +1,10 @@
-import { useEffect, useReducer, useState, type KeyboardEvent } from 'react';
+import {
+  useEffect,
+  useReducer,
+  useState,
+  type DragEvent,
+  type KeyboardEvent,
+} from 'react';
 import { AnimatePresence, motion } from 'motion/react';
 import trashIcon from '../../assets/icon/trash.svg';
 import { subtlePresence } from '../../lib/motion';
@@ -55,6 +61,62 @@ function getOrderedTasks(tasks: Task[]) {
     parent,
     ...getChildren(tasks, parent.id),
   ]);
+}
+
+type MovePosition = 'before' | 'after';
+
+function getMoveSiblings(tasks: Task[], task: Task) {
+  if (task.parentId !== null) return getChildren(tasks, task.parentId);
+
+  return getRootTasks(tasks).filter(
+    (candidate) => candidate.completed === task.completed,
+  );
+}
+
+function canReorderTasks(tasks: Task[], sourceId: string, targetId: string) {
+  const source = tasks.find((task) => task.id === sourceId);
+  const target = tasks.find((task) => task.id === targetId);
+
+  return Boolean(
+    source &&
+    target &&
+    source.id !== target.id &&
+    source.parentId === target.parentId &&
+    (source.parentId !== null || source.completed === target.completed),
+  );
+}
+
+function reorderTasks(
+  tasks: Task[],
+  sourceId: string,
+  targetId: string,
+  position: MovePosition,
+) {
+  if (!canReorderTasks(tasks, sourceId, targetId)) return tasks;
+
+  const source = tasks.find((task) => task.id === sourceId)!;
+  const orderedTasks = getOrderedTasks(tasks);
+  const movedTaskIds = new Set([
+    source.id,
+    ...(source.parentId === null
+      ? getChildren(tasks, source.id).map((child) => child.id)
+      : []),
+  ]);
+  const movedTasks = orderedTasks.filter((task) => movedTaskIds.has(task.id));
+  const remainingTasks = orderedTasks.filter(
+    (task) => !movedTaskIds.has(task.id),
+  );
+  const targetIndex = remainingTasks.findIndex((task) => task.id === targetId);
+  const target = remainingTasks[targetIndex];
+  const targetGroupSize =
+    target.parentId === null
+      ? 1 + getChildren(remainingTasks, target.id).length
+      : 1;
+  const insertIndex =
+    targetIndex + (position === 'after' ? targetGroupSize : 0);
+
+  remainingTasks.splice(insertIndex, 0, ...movedTasks);
+  return remainingTasks;
 }
 
 function removeTaskGroup(tasks: Task[], id: string) {
@@ -116,6 +178,8 @@ function TaskBoard() {
   const [editingOriginal, setEditingOriginal] = useState<string | null>(null);
   const [draft, setDraft] = useState('');
   const [copiedTask, setCopiedTask] = useState<Task | null>(null);
+  const [draggedTaskId, setDraggedTaskId] = useState<string | null>(null);
+  const [dragOverTaskId, setDragOverTaskId] = useState<string | null>(null);
   const tasks = history.present;
   const parentTasks = getRootTasks(tasks);
   const todoTasks = parentTasks.filter((task) => !task.completed);
@@ -320,6 +384,74 @@ function TaskBoard() {
       ?.focus();
   };
 
+  const handleMoveTask = (task: Task, direction: -1 | 1) => {
+    const siblings = getMoveSiblings(tasks, task);
+    const taskIndex = siblings.findIndex((sibling) => sibling.id === task.id);
+    const targetTask = siblings[taskIndex + direction];
+
+    if (!targetTask) return;
+
+    const nextTasks = reorderTasks(
+      tasks,
+      task.id,
+      targetTask.id,
+      direction < 0 ? 'before' : 'after',
+    );
+
+    if (nextTasks === tasks) return;
+
+    applyTasks(nextTasks);
+    requestAnimationFrame(() => {
+      document
+        .querySelector<HTMLElement>(`[data-task-id="${task.id}"]`)
+        ?.focus();
+    });
+  };
+
+  const handleTaskDragStart = (
+    event: DragEvent<HTMLDivElement>,
+    task: Task,
+  ) => {
+    event.dataTransfer.effectAllowed = 'move';
+    event.dataTransfer.setData('text/plain', task.id);
+    setDraggedTaskId(task.id);
+  };
+
+  const handleTaskDragOver = (event: DragEvent<HTMLDivElement>, task: Task) => {
+    if (!draggedTaskId || !canReorderTasks(tasks, draggedTaskId, task.id)) {
+      return;
+    }
+
+    event.preventDefault();
+    event.dataTransfer.dropEffect = 'move';
+    setDragOverTaskId(task.id);
+  };
+
+  const handleTaskDrop = (event: DragEvent<HTMLDivElement>, task: Task) => {
+    const sourceId = event.dataTransfer.getData('text/plain') || draggedTaskId;
+
+    if (!sourceId || !canReorderTasks(tasks, sourceId, task.id)) return;
+
+    event.preventDefault();
+
+    const bounds = event.currentTarget.getBoundingClientRect();
+    const position =
+      event.clientY < bounds.top + bounds.height / 2 ? 'before' : 'after';
+    const nextTasks = reorderTasks(tasks, sourceId, task.id, position);
+
+    if (nextTasks !== tasks) {
+      applyTasks(nextTasks);
+      requestAnimationFrame(() => {
+        document
+          .querySelector<HTMLElement>(`[data-task-id="${sourceId}"]`)
+          ?.focus();
+      });
+    }
+
+    setDraggedTaskId(null);
+    setDragOverTaskId(null);
+  };
+
   const handleTaskKeyDown = (
     event: KeyboardEvent<HTMLDivElement>,
     task: Task,
@@ -345,6 +477,15 @@ function TaskBoard() {
         event.preventDefault();
         handlePasteTask(task.id);
       }
+      return;
+    }
+
+    if (
+      usesModifier &&
+      (event.key === 'ArrowUp' || event.key === 'ArrowDown')
+    ) {
+      event.preventDefault();
+      handleMoveTask(task, event.key === 'ArrowUp' ? -1 : 1);
       return;
     }
 
@@ -377,7 +518,11 @@ function TaskBoard() {
       return;
     }
 
-    if (event.key === 'Delete' || event.key === 'Escape') {
+    if (
+      event.key === 'Delete' ||
+      event.key === 'Backspace' ||
+      event.key === 'Escape'
+    ) {
       event.preventDefault();
       handleDeleteTask(task.id);
       return;
@@ -447,14 +592,23 @@ function TaskBoard() {
         <TaskItem
           data-task-id={task.id}
           role="listitem"
+          draggable={!editingId}
           autoFocus={editingId === task.id}
           checked={task.completed}
+          className={`cursor-grab active:cursor-grabbing ${dragOverTaskId === task.id ? 'bg-app-hover' : ''}`}
           editing={editingId === task.id}
           isSubtask={isSubtask}
           label={task.text}
           value={editingId === task.id ? draft : task.text}
           onCancel={handleCancelEdit}
           onCheckedChange={() => handleToggleCompleted(task.id)}
+          onDragStart={(event) => handleTaskDragStart(event, task)}
+          onDragOver={(event) => handleTaskDragOver(event, task)}
+          onDrop={(event) => handleTaskDrop(event, task)}
+          onDragEnd={() => {
+            setDraggedTaskId(null);
+            setDragOverTaskId(null);
+          }}
           onDelete={() => handleDeleteTask(task.id)}
           onEdit={() => handleEditTask(task)}
           onKeyDown={(event) => handleTaskKeyDown(event, task)}
@@ -522,9 +676,7 @@ function TaskBoard() {
               </p>
             </div>
           ) : (
-            <div role="list">
-              {todoTasks.map(renderTaskGroup)}
-            </div>
+            <div role="list">{todoTasks.map(renderTaskGroup)}</div>
           )}
         </section>
 

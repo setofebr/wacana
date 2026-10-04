@@ -164,6 +164,18 @@ function KeyboardShortcutsModal({
           </Key>
           <ShortcutKey>V</ShortcutKey>
         </ShortcutRow>
+        <ShortcutRow divider label="Move Task Up">
+          <Key size="medium" type={modifierType}>
+            {modifierLabel || undefined}
+          </Key>
+          <ShortcutKey>↑</ShortcutKey>
+        </ShortcutRow>
+        <ShortcutRow divider label="Move Task Down">
+          <Key size="medium" type={modifierType}>
+            {modifierLabel || undefined}
+          </Key>
+          <ShortcutKey>↓</ShortcutKey>
+        </ShortcutRow>
         <ShortcutRow divider label="Move selection">
           <ShortcutKey>↑</ShortcutKey>
           <ShortcutSeparator />
